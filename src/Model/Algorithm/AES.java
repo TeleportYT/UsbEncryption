@@ -101,7 +101,7 @@ public class AES {
             }
 
          //  System.out.println("After addRoundKey(" + c + "):");
-            printPlainText(dataBlock.getData(), 4, 4);
+            //printPlainText(dataBlock.getData(), 4, 4);
 
             for (int c2 = 0; c2 < 4; c2++) {
 
@@ -112,7 +112,7 @@ public class AES {
             }
 
            // System.out.println("After subBytes:");
-            printPlainText(dataBlock.getData(), 4, 4);
+            //printPlainText(dataBlock.getData(), 4, 4);
 
             for (int c2 = 0; c2 < 4; c2++) {
                 char temp[] = {dataBlock.getData()[c2][0], dataBlock.getData()[c2][1], dataBlock.getData()[c2][2], dataBlock.getData()[c2][3]};
@@ -123,7 +123,7 @@ public class AES {
             }
 
           //  System.out.println("After shiftRows:");
-            printPlainText(dataBlock.getData(), 4, 4);
+           // printPlainText(dataBlock.getData(), 4, 4);
 
             if (c == 13) {
                 break;
@@ -135,7 +135,7 @@ public class AES {
             mixColumn2(3, dataBlock.getData());
 
           //  System.out.println("After mixColumns:");
-            printPlainText(dataBlock.getData(), 4, 4);
+           // printPlainText(dataBlock.getData(), 4, 4);
         }
         for (int c2 = 0; c2 < 4; c2++) {
             dataBlock.getData()[0][c2] ^= key.getExtendedKey()[0][14 * 4 + c2];
@@ -145,7 +145,7 @@ public class AES {
         }
 
        // System.out.println("After addRoundKey(14):");
-        printPlainText(dataBlock.getData(), 4, 4);
+      //  printPlainText(dataBlock.getData(), 4, 4);
 
         //encryption is complete!
         return dataBlock;
@@ -162,7 +162,7 @@ public class AES {
         }
 
         //System.out.println("After addRoundKey(14):");
-        printPlainText(dataBlock.getData(), 4, 4);
+       // printPlainText(dataBlock.getData(), 4, 4);
 
         for (int c = 13; c >= 0; c--) {
 
@@ -175,7 +175,7 @@ public class AES {
             }
 
           //  System.out.println("After invShiftRows:");
-            printPlainText(dataBlock.getData(), 4, 4);
+           // printPlainText(dataBlock.getData(), 4, 4);
 
             for (int c2 = 0; c2 < 4; c2++) {
                 dataBlock.getData()[0][c2] = SBox.getSBoxInvert(dataBlock.getData()[0][c2]);
@@ -185,7 +185,7 @@ public class AES {
             }
 
           //  System.out.println("After invSubBytes:");
-            printPlainText(dataBlock.getData(), 4, 4);
+           // printPlainText(dataBlock.getData(), 4, 4);
 
             for (int c2 = 0; c2 < 4; c2++) {
                 dataBlock.getData()[0][c2] ^= key.getExtendedKey()[0][c * 4 + c2];
@@ -195,7 +195,7 @@ public class AES {
             }
 
           //  System.out.println("After addRoundKey(" + c + "):");
-            printPlainText(dataBlock.getData(), 4, 4);
+            //printPlainText(dataBlock.getData(), 4, 4);
 
             if (c == 0) {
                 return dataBlock;
@@ -207,7 +207,7 @@ public class AES {
             invMixColumn2(3, dataBlock.getData());
 
           //  System.out.println("After invMixColumns:");
-            printPlainText(dataBlock.getData(), 4, 4);
+            //printPlainText(dataBlock.getData(), 4, 4);
 
         }
         return dataBlock;

@@ -2,12 +2,16 @@ import Model.Algorithm.AES;
 import Model.Algorithm.Block;
 import Model.Key_Controller.Key;
 import Model.Key_Controller.KeyGenerator;
+import Model.ThreadBlock;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Queue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class FileHolder {
     private String filepath;
@@ -76,17 +80,35 @@ public class FileHolder {
         return data;
     }
 
-    public static void main(String[] args) throws Exception {
-        FileHolder fileHolder = new FileHolder("C:\\Users\\Vivien\\Documents\\Github\\UsbEncryption\\READE.md");
-        System.out.println("File Path: " + fileHolder.getFilePath());
+    public void EnctyptFile(AES aes){
+        for (Block block : blocks){
+            aes.Encrypt(block);
+        }
+    }
 
-        Queue<Block> blocks = fileHolder.getBlocks();
-        Key key = new Key(KeyGenerator.generateKey("vivien1107","boobssssssssssss").toCharArray());
-        AES aes =new AES(key);
+    public void DecryptFile(AES aes){
         for (Block block : blocks){
             aes.Decrypt(block);
         }
+    }
 
-        fileHolder.writeBlocksToBinaryFile("C:\\Users\\Vivien\\Documents\\Github\\UsbEncryption\\READMD.md");
+    public static void main(String[] args) throws Exception {
+        FileHolder fileHolder = new FileHolder("C:\\Users\\Vivien\\Downloads\\FIFA 19-Xbox 360-Multi[Jtag-RGH]-eNJoY-iT.rar");
+        System.out.println("File Path: " + fileHolder.getFilePath());
+
+        Key k = new Key(KeyGenerator.generateKey("vladi1977", "kjhjkhjlkjlkj").toCharArray());
+        AES algo = new AES(k);
+
+        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
+        for (Block block : fileHolder.blocks) {
+            ThreadBlock bl = new ThreadBlock(block, algo, Boolean.TRUE);
+            executorService.submit(bl);
+        }
+
+        executorService.shutdown();
+        executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+
+        fileHolder.writeBlocksToBinaryFile(fileHolder.getFilePath());
     }
 }
