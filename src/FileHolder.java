@@ -27,12 +27,16 @@ public class FileHolder {
     private String filepath;
     private Queue<Block> blocks;
 
+    private AES algo;
+
     private Boolean mode;//True-Encrypt False-Decrypt
     private static final int CHUNK_SIZE = 1024 * 1024; // 1 MB
 
-    public FileHolder(String filepath) {
+    public FileHolder(String filepath,AES algo,Boolean mode) {
         this.filepath = filepath;
         this.blocks = readFileIntoBlocks(filepath);
+        this.mode = mode;
+        this.algo = algo;
     }
 
     private Queue<Block> readFileIntoBlocks(String filepath) {
@@ -109,13 +113,11 @@ public class FileHolder {
                 Files.createDirectories(extractedFilePath.getParent());
                 Files.copy(zipInputStream, extractedFilePath);
 
-                Key k = new Key(KeyGenerator.generateKey("vladi1977", "kjhjkhjlkjlkj").toCharArray());
-                AES algo = new AES(k);
 
-                FileHolder fileHolder = new FileHolder(extractedFilePath.toString());
+                FileHolder fileHolder = new FileHolder(extractedFilePath.toString(),algo,mode);
                 ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
                 for (Block block : fileHolder.blocks) {
-                    ThreadBlock bl = new ThreadBlock(block, algo, Boolean.FALSE);
+                    ThreadBlock bl = new ThreadBlock(block, algo, mode);
                     executorService.submit(bl);
                 }
                 executorService.shutdown();
@@ -123,7 +125,7 @@ public class FileHolder {
 
                 extractedFilePath.toFile().delete();
                 Files.copy(fileHolder.getBlocksAsInputStream(), tempDirectory.resolve(zipEntry.getName()));
-                System.out.println("Next file");
+                //System.out.println("Next file");
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -132,12 +134,12 @@ public class FileHolder {
         try (ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(zipFilePath.toFile()))) {
             for (File file : tempDirectory.toFile().listFiles()) {
                 addFileToZip(zipOutputStream, file, file.getName());
-                System.out.println("Next Add");
+                //System.out.println("Next Add");
             }
         }
-        System.out.println("Next Finish");
+        //System.out.println("Next Finish");
         Files.walk(tempDirectory).map(Path::toFile).forEach(File::delete);
-        System.out.println("End");
+        //System.out.println("End");
     }
 
     private void addFileToZip(ZipOutputStream zipOutputStream, File file, String entryName) throws IOException {
@@ -153,8 +155,17 @@ public class FileHolder {
         }
     }
 
-    private InputStream getBlocksAsInputStream() throws IOException {
+    private InputStream getBlocksAsInputStream() throws IOException, InterruptedException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        for (Block block : blocks) {
+            ThreadBlock bl = new ThreadBlock(block, algo, mode);
+            executorService.submit(bl);
+        }
+        executorService.shutdown();
+        executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+
         for (Block block : blocks) {
             byte[] data = hexStringToBytes(AES.writeMatrix(block.getData(), 4, 4));
             outputStream.write(data);
@@ -177,23 +188,6 @@ public class FileHolder {
         }
     }
 
-    private String getZipEntryName(String outputFilePath, Block block) {
-        Queue<Block> blocksQueue = new LinkedList<>();
-        blocksQueue.add(block);
-
-        String zipEntryName = outputFilePath;
-        int lastSlashIndex = zipEntryName.lastIndexOf('\\');
-        if (lastSlashIndex != -1) {
-            zipEntryName = zipEntryName.substring(lastSlashIndex + 1);
-        }
-
-        while (!blocksQueue.isEmpty()) {
-            Block currentBlock = blocksQueue.poll();
-            zipEntryName = zipEntryName.concat("_" + currentBlock.getData());
-        }
-
-        return zipEntryName;
-    }
 
     private byte[] hexStringToBytes(String hexString) {
         int len = hexString.length();
@@ -209,21 +203,9 @@ public class FileHolder {
 
 
     public static void main(String[] args) throws Exception {
-        FileHolder fileHolder = new FileHolder("C:\\Users\\Vivien\\Downloads\\snowy-mountain-peak-starry-galaxy-majesty-generative-ai.zip");
-        System.out.println("File Path: " + fileHolder.getFilePath());
-
         Key k = new Key(KeyGenerator.generateKey("vladi1977", "kjhjkhjlkjlkj").toCharArray());
-        AES algo = new AES(k);
-
-        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-
-        for (Block block : fileHolder.blocks) {
-            ThreadBlock bl = new ThreadBlock(block, algo, Boolean.FALSE);
-            executorService.submit(bl);
-        }
-
-        executorService.shutdown();
-        executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        FileHolder fileHolder = new FileHolder("C:\\Users\\Vivien\\Downloads\\snowy-mountain-peak-starry-galaxy-majesty-generative-ai.zip",new AES(k),Boolean.FALSE);
+        System.out.println("File Path: " + fileHolder.getFilePath());
         System.out.println("Saving file");
         fileHolder.writeBlocksToFile("C:\\Users\\Vivien\\Downloads\\snowy-mountain-peak-starry-galaxy-majesty-generative-ai.zip");
         System.out.println("Finished");
