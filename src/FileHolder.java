@@ -171,6 +171,13 @@ public class FileHolder {
             byte[] blockData = new byte[numBlocks * 16]; // Each block is 16 bytes long
             int offset = 0;
 
+            ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+            for (Block block : blocks) {
+                ThreadBlock bl = new ThreadBlock(block, algo, mode);
+                executorService.submit(bl);
+            }
+            executorService.shutdown();
+            executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 
             for (Block block : blocks) {
                 byte[] data = hexStringToBytes(AES.writeMatrix(block.getData(), 4, 4));
@@ -198,13 +205,7 @@ public class FileHolder {
         Key k = new Key(KeyGenerator.generateKey("vladi1977", "kjhjkhjlkjlkj").toCharArray());
         FileHolder fileHolder = new FileHolder("C:\\Users\\Vivien\\Downloads\\snowy-mountain-peak-starry-galaxy-majesty-generative-ai.zip",new AES(k),Boolean.FALSE);
         System.out.println("File Path: " + fileHolder.getFilePath());
-        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        for (Block block : fileHolder.blocks) {
-            ThreadBlock bl = new ThreadBlock(block, fileHolder.algo, fileHolder.mode);
-            executorService.submit(bl);
-        }
-        executorService.shutdown();
-        executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+
         System.out.println("Saving file");
         fileHolder.writeBlocksToFile("C:\\Users\\Vivien\\Downloads\\snowy-mountain-peak-starry-galaxy-majesty-generative-ai.zip");
         System.out.println("Finished");
