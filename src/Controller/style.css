@@ -1,0 +1,13 @@
+.root {
+    -fx-padding: 10 ;
+    -fx-alignment: center ;
+}
+
+.progress-bar > .bar {
+    -fx-background-image: url("img.png");
+    -fx-alignment: center;
+    -fx-background-position: right;
+    -fx-background-color: transparent;
+    -fx-background-repeat: repeat-x;
+    -fx-background-size: 100% 100%;
+}

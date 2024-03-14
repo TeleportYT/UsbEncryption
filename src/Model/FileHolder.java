@@ -1,19 +1,14 @@
+package Model;
+
 import Model.Algorithm.AES;
 import Model.Algorithm.Block;
 import Model.Key_Controller.KeyGenerator;
 import Model.Key_Controller.Key;
-import Model.ThreadBlock;
 
 import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.channels.WritableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayDeque;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ExecutorService;
