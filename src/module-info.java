@@ -4,5 +4,6 @@ module testingEncryption {
     exports Model;
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.desktop;
     // other requires directives
 }

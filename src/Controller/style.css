@@ -4,7 +4,7 @@
 }
 
 .progress-bar > .bar {
-    -fx-background-image: url("img.png");
+    -fx-background-image: url("Resources/rainborBar.png");
     -fx-alignment: center;
     -fx-background-position: right;
     -fx-background-color: transparent;

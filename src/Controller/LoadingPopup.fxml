@@ -13,7 +13,7 @@
                 <ProgressBar fx:id="loadingIndicator" prefHeight="18.0" prefWidth="306.0" progress="0.0" stylesheets="@style.css" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
                 <ImageView fx:id="loadingGif" fitHeight="39.0" fitWidth="52.0" layoutX="-100.0" preserveRatio="true" translateX="-153.0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                     <image>
-                        <Image url="@rainbowDashNoBg.gif" />
+                        <Image url="@Resources/rainbowDashNoBg.gif" />
                     </image>
                <StackPane.margin>
                   <Insets />

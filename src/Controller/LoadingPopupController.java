@@ -23,7 +23,6 @@ public class LoadingPopupController {
     private static final double progressWidth  = 306;
     public void initialize() {
         loadingGif.setTranslateX(-1*progressWidth/2);
-        setProgress(0.5);
     }
 
         public void setMessage(String message) {

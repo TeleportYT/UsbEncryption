@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -21,7 +22,9 @@ public class LoadingPopup {
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initOwner(parentStage);
-        stage.initStyle(StageStyle.UNDECORATED);
+        stage.initStyle(StageStyle.DECORATED);
+        stage.setOnCloseRequest(e->e.consume());
+        stage.getIcons().add(new Image(getClass().getResource("Resources/icon.jpg").toExternalForm()));
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("LoadingPopup.fxml"));

@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import Controller.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="ap" prefHeight="400.0" prefWidth="586.0" style="-fx-background-color: #0c1821;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.MainScreenController">
+<AnchorPane fx:id="ap" prefHeight="400.0" prefWidth="576.0" style="-fx-background-color: #0c1821;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.MainScreenController">
    <children>
-      <ChoiceBox fx:id="disksList" layoutX="263.0" layoutY="56.0" prefWidth="150.0" />
-      <Text fill="WHITE" layoutX="112.0" layoutY="77.0" text="Disk on Key:" wrappingWidth="149.0">
+      <HBox layoutY="-4.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" prefHeight="65.0" prefWidth="576.0" style="-fx-background-color: #000000;" />
+      <ChoiceBox fx:id="disksList" layoutX="288.0" layoutY="87.0" prefWidth="150.0" />
+      <Text fill="WHITE" layoutX="139.0" layoutY="108.0" text="Disk on Key:" wrappingWidth="149.0">
          <font>
             <Font name="Arial Rounded MT Bold" size="22.0" />
          </font></Text>
-      <Text fill="WHITE" layoutX="112.0" layoutY="123.0" text="Password:" wrappingWidth="150.0">
+      <Text fill="WHITE" layoutX="138.0" layoutY="144.0" text="Password:" wrappingWidth="150.0">
          <font>
             <Font name="Arial Rounded MT Bold" size="22.0" />
          </font></Text>
-      <Text fx:id="SaltManual" fill="WHITE" layoutX="112.0" layoutY="165.0" text="Manual Salt :" wrappingWidth="150.0">
+      <Text fx:id="SaltManual" fill="WHITE" layoutX="138.0" layoutY="182.0" text="Manual Salt :" wrappingWidth="150.0">
          <font>
             <Font name="Arial Rounded MT Bold" size="22.0" />
          </font></Text>
-      <Text fx:id="saltTxt" fill="WHITE" layoutX="112.0" layoutY="209.0" text="Salt:" visible="false" wrappingWidth="177.41796875">
+      <Text fx:id="saltTxt" fill="WHITE" layoutX="137.0" layoutY="222.0" text="Salt:" wrappingWidth="177.41796875">
          <font>
             <Font name="Arial Rounded MT Bold" size="22.0" />
          </font></Text>
-      <Button fx:id="encrypt" layoutX="79.0" layoutY="249.0" mnemonicParsing="false" onAction="#Encrypt" prefHeight="49.0" prefWidth="134.0" style="-fx-background-color: transparent;" text="Button">
+      <Button fx:id="encrypt" layoutX="73.0" layoutY="286.0" mnemonicParsing="false" onAction="#Encrypt" prefHeight="49.0" prefWidth="134.0" style="-fx-background-color: transparent;" text="Button">
          <graphic>
             <ImageView fx:id="encImg" focusTraversable="true">
-               <Image url="@encrypt.png" />
+               <Image url="@Resources/encrypt.png" />
                <effect>
                   <ColorAdjust brightness="-0.3" />
                </effect>
@@ -38,10 +38,10 @@
       </Button>
 
 
-      <Button fx:id="decrypt" layoutX="303.0" layoutY="249.0" mnemonicParsing="false" onAction="#Decrypt" prefHeight="49.0" prefWidth="134.0" style="-fx-background-color: transparent;" text="Button">
+      <Button fx:id="decrypt" layoutX="297.0" layoutY="286.0" mnemonicParsing="false" onAction="#Decrypt" prefHeight="49.0" prefWidth="134.0" style="-fx-background-color: transparent;" text="Button">
         <graphic>
          <ImageView fx:id="decImg">
-            <Image url="@decrypt.png" />
+            <Image url="@Resources/decrypt.png" />
                <effect>
                   <ColorAdjust brightness="-0.3" />
                </effect>
@@ -49,8 +49,29 @@
         </graphic>
       </Button>
 
-      <TextField fx:id="passInput" layoutX="264.0" layoutY="102.0" />
-      <TextField fx:id="saltInput" layoutX="264.0" layoutY="188.0" visible="false" />
-      <CheckBox fx:id="manual" layoutX="264.0" layoutY="148.0" mnemonicParsing="false" prefWidth="22.0" />
+      <Button fx:id="Exit" layoutX="494.0" layoutY="14.0" mnemonicParsing="false" onAction="#Decrypt" prefHeight="59.0" prefWidth="22.0" style="-fx-background-color: transparent;" text="Button" />
+
+      <TextField fx:id="passInput" layoutX="290.0" layoutY="123.0" />
+      <TextField fx:id="saltInput" layoutX="288.0" layoutY="202.0" />
+      <CheckBox fx:id="manual" layoutX="290.0" layoutY="165.0" mnemonicParsing="false" prefWidth="22.0" />
+      <ImageView fx:id="exit" fitHeight="38.0" fitWidth="39.0" layoutX="523.0" layoutY="14.0" onMouseClicked="#Exit" onMouseEntered="#mouseEnter" onMouseExited="#mouseLeave">
+         <Image url="@Resources/button_x.png" />
+         <effect>
+            <ColorAdjust />
+         </effect>
+
+      </ImageView>
+      <ImageView fitHeight="38.0" fitWidth="150.0" layoutX="62.0" layoutY="14.0" onMouseEntered="#mouseEnter" onMouseExited="#mouseLeave" pickOnBounds="true" preserveRatio="true">
+         <Image url="@Resources/button_about.png" />
+         <effect>
+            <ColorAdjust />
+         </effect>
+      </ImageView>
+      <ImageView fitHeight="38.0" fitWidth="150.0" layoutX="14.0" layoutY="14.0" onMouseEntered="#mouseEnter" onMouseExited="#mouseLeave" pickOnBounds="true" preserveRatio="true">
+         <Image url="@Resources/iconBg.png" />
+         <effect>
+            <ColorAdjust />
+         </effect>
+      </ImageView>
    </children>
 </AnchorPane>
