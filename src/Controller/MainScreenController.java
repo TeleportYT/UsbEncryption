@@ -20,6 +20,7 @@ import javafx.scene.effect.Effect;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -38,26 +39,23 @@ public class MainScreenController implements AESObserver {
     private ChoiceBox disksList;
 
     @FXML
-    private TextField passInput;
+    private TextField passInput,saltInput;
 
     @FXML
     private Button encrypt,decrypt;
 
-    @FXML
-    private ImageView encImg,decImg;
-
     private ModelControl model;
+
+    @FXML
+    private Text salt;
+    private boolean isSalt=false;
 
     public void initialize() {
         List<String> drives = UsbDriveFinder.getUsbDrives();
 
-        // Convert the array to an ObservableList
         ObservableList<String> itemList = FXCollections.observableArrayList(drives);
 
-        // Add the items to the ChoiceBox
         disksList.setItems(itemList);
-
-        // Optional: Set a default selected item
         disksList.getSelectionModel().selectFirst();
 
         model = new ModelControl();
@@ -73,14 +71,12 @@ public class MainScreenController implements AESObserver {
 
     private void checkPassword(String newValue){
         if(newValue.length()<6){
-            encrypt.setCancelButton(true);
-            ((ColorAdjust)decImg.getEffect()).brightnessProperty().set(-0.3);
-            ((ColorAdjust)encImg.getEffect()).brightnessProperty().set(-0.3);
+            encrypt.setDisable(true);
+            decrypt.setDisable(true);
             return;
         }
-        encrypt.setCancelButton(false);
-        ((ColorAdjust)decImg.getEffect()).brightnessProperty().set(0);
-        ((ColorAdjust)encImg.getEffect()).brightnessProperty().set(0);
+        encrypt.setDisable(false);
+        decrypt.setDisable(false);
     }
 
     private double mousePressX;
@@ -110,7 +106,7 @@ public class MainScreenController implements AESObserver {
 
         new Thread(() -> {
             try {
-                model.StartProcess((disksList.getSelectionModel().getSelectedItem().toString().substring(0,1)),passInput.getText(),"RandomForNow",Boolean.TRUE);
+                model.StartProcess((disksList.getSelectionModel().getSelectedItem().toString().substring(0,1)),passInput.getText(),saltInput.getText(),Boolean.TRUE);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -121,7 +117,7 @@ public class MainScreenController implements AESObserver {
         LoadingPopup("Decrypting...");
         new Thread(() -> {
             try {
-               model.StartProcess((disksList.getSelectionModel().getSelectedItem().toString().substring(0,1)),passInput.getText(),"RandomForNow",Boolean.FALSE);
+               model.StartProcess((disksList.getSelectionModel().getSelectedItem().toString().substring(0,1)),passInput.getText(),saltInput.getText(),Boolean.FALSE);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -151,7 +147,10 @@ public class MainScreenController implements AESObserver {
 
     @FXML
     public void Exit(){
-        exit(0);
+        if (primaryStage==null){
+            primaryStage = (Stage) ap.getScene().getWindow();
+        }
+        primaryStage.close();
     }
 
     @FXML
@@ -164,5 +163,20 @@ public class MainScreenController implements AESObserver {
     public void mouseLeave(MouseEvent event) {
         Node node = (Node) event.getSource();
         ((ColorAdjust)node.getEffect()).brightnessProperty().set(0);
+    }
+
+    @FXML
+    public void handle(MouseEvent me) {
+        if (primaryStage==null){
+            primaryStage = (Stage) ap.getScene().getWindow();
+        }
+        primaryStage.setIconified(true);
+    }
+
+    @FXML
+    public void changeSalt(){
+            salt.setVisible(!isSalt);
+            saltInput.setVisible(!isSalt);
+            isSalt = !isSalt;
     }
 }

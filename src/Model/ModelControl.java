@@ -1,6 +1,7 @@
 package Model;
 
 import Model.Algorithm.AES;
+import Model.Algorithm.SaltGenerator;
 import Model.Key_Controller.Key;
 import Model.Key_Controller.KeyGenerator;
 import Model.USB_Controller.UsbDriveFinder;
@@ -24,8 +25,7 @@ public class ModelControl implements Observable {
         usb.readFiles();
         int amount = usb.getFilePaths().size();
         System.out.println("amount: "+amount);
-        Key key  = new Key(KeyGenerator.generateKey(pass,salt).toCharArray());
-        AES algo = new AES(key);
+
         ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
 
@@ -35,6 +35,13 @@ public class ModelControl implements Observable {
             executorService.submit(new Runnable() {
                 @Override
                 public void run() {
+                    Key key  = new Key(KeyGenerator.generateKey(pass, !salt.isEmpty() ? salt : SaltGenerator.generate(path)).toCharArray());
+                    AES algo = null;
+                    try {
+                        algo = new AES(key);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                     FileHolder file = new FileHolder(path,algo,Mode);
                     try {
                        // System.out.println("File: "+path+" Being encrypted");

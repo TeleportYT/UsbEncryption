@@ -25,7 +25,7 @@ public class MainScreen extends Application {
         primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.setTitle("VLock");
         primaryStage.getIcons().add(new Image(getClass().getResource("Resources/icon.jpg").toExternalForm()));
-        primaryStage.setScene(new Scene(root, 576.0, 400));
+        primaryStage.setScene(new Scene(root, 780, 521));
         primaryStage.show();
     }
 

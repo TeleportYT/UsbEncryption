@@ -166,6 +166,7 @@ public class FileHolder {
             byte[] blockData = new byte[numBlocks * 16]; // Each block is 16 bytes long
             int offset = 0;
 
+
             ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
             for (Block block : blocks) {
                 ThreadBlock bl = new ThreadBlock(block, algo, mode);
@@ -173,6 +174,8 @@ public class FileHolder {
             }
             executorService.shutdown();
             executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+
+
 
             for (Block block : blocks) {
                 byte[] data = hexStringToBytes(AES.writeMatrix(block.getData(), 4, 4));
