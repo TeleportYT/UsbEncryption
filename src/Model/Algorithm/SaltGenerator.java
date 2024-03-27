@@ -7,6 +7,6 @@ public class SaltGenerator {
         File file = new File(filePath);
         String salt = file.getName()+file.getAbsolutePath();
         System.out.println("Salt: "+ salt+" gen: "+salt.getBytes().toString());
-        return salt;
+        return salt.substring(0,32);
     }
 }

@@ -17,7 +17,10 @@ public class ThreadBlock implements Runnable{
     @Override
     public void run() {
         if (mode){
+            System.out.println(AES.writeMatrix(bl.getData(),4,4));
             algorithm.Encrypt(bl);
+            System.out.println(AES.writeMatrix(bl.getData(),4,4));
+
         }
         else{
             algorithm.Decrypt(bl);

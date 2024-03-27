@@ -1,5 +1,6 @@
 package Controller.controllers;
 
+import Model.FunctionMode;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -68,16 +69,14 @@ public class AboutController {
     }
 
 
-    @FXML
-    public void Back(){
-        if (primaryStage==null){
-            primaryStage = (Stage) ap.getScene().getWindow();
-        }
+    FunctionMode mode;
+
+    public void showNextStage(String showNextStage){
         if (primaryStage==null){
             primaryStage = (Stage) ap.getScene().getWindow();
         }
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Controller/fxmls/sample.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(showNextStage));
             Parent root = loader.load();
             Scene scene = new Scene(root, 780, 521);
             scene.setFill(Color.TRANSPARENT);
@@ -85,6 +84,19 @@ public class AboutController {
             primaryStage.show();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+    public void setMode(FunctionMode mode){
+        System.out.println(mode);
+        this.mode = mode;
+    }
+    @FXML
+    public void Back(){
+        switch (mode.name()){
+            case "Usb" -> showNextStage("/Controller/fxmls/sample.fxml");
+            case "Folder" -> showNextStage("/Controller/fxmls/FolderForm.fxml");
+            case "File" -> showNextStage("/Controller/fxmls/FileForm.fxml");
+
         }
     }
 

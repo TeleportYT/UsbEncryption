@@ -10,7 +10,7 @@
 <AnchorPane fx:id="ap" onMouseClicked="#CloseMenu" prefHeight="521.0" prefWidth="780.0" style="-fx-background-color: #0c1821;-fx-background-radius: 18 18 18 18;-fx-border-radius: 18 18 18 18;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.controllers.MainScreenController">
    <children>
       <HBox layoutY="-4.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" prefHeight="65.0" prefWidth="780.0" style="-fx-background-color: #000000;-fx-background-radius: 18 18 0 0;-fx-border-radius: 18 18 0 0;" />
-      <ChoiceBox fx:id="disksList" layoutX="406.0" layoutY="86.0" onMouseExited="#setPath" prefWidth="150.0" />
+      <ChoiceBox fx:id="disksList" layoutX="406.0" layoutY="86.0" prefWidth="150.0" />
       <Text fill="WHITE" layoutX="241.0" layoutY="106.0" text="Disk on Key:" wrappingWidth="149.0">
          <font>
             <Font name="Arial Rounded MT Bold" size="22.0" />

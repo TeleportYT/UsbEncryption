@@ -7,10 +7,10 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="ap" onMousePressed="#CloseMenu" prefHeight="522.0" prefWidth="706.0" style="-fx-background-color: #0c1821;-fx-background-radius: 18 18 18 18;-fx-border-radius: 18 18 18 18;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.controllers.FileEncryption">
+<AnchorPane fx:id="ap" onMousePressed="#CloseMenu" prefHeight="522.0" prefWidth="706.0" style="-fx-background-color: #0c1821;-fx-background-radius: 18 18 18 18;-fx-border-radius: 18 18 18 18;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.controllers.FolderController">
     <children>
         <HBox layoutY="-4.0" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" prefHeight="65.0" prefWidth="780.0" style="-fx-background-color: #000000;-fx-background-radius: 18 18 0 0;-fx-border-radius: 18 18 0 0;" />
-        <Text fx:id="chooseTxt" fill="WHITE" layoutX="198.0" layoutY="104.0" text="Choose File:" wrappingWidth="320.0">
+        <Text fx:id="chooseTxt" fill="WHITE" layoutX="198.0" layoutY="104.0" text="Choose Folder:" wrappingWidth="320.0">
             <font>
                 <Font name="Arial Rounded MT Bold" size="22.0" />
             </font></Text>

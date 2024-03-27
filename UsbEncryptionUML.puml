@@ -1,0 +1,163 @@
+@startuml
+class Controller.LoadingPopupController {
+- ProgressBar loadingIndicator
+- Label loadingMessage
+- ImageView loadingGif
+- {static} double progressWidth
+~ double position
++ void initialize()
++ void setMessage(String)
++ void setProgress(double)
++ double getProgress()
+}
+class Model.Key_Controller.KeyGenerator {
++ {static} String generateKey(String,String)
+}
+class Model.USB_Controller.UsbDriveFinder {
++ {static} List<String> getUsbDrives()
+- {static} boolean isUsbDrive(File)
+}
+class Model.ModelControl {
+- List<AESObserver> observers
++ void StartProcess(String,String,String,Boolean)
++ void addListener(AESObserver)
++ void removeListener(AESObserver)
+- void notifyObservers()
+- void notifyProgressObservers(double)
++ void addListener(InvalidationListener)
++ void removeListener(InvalidationListener)
+}
+class Model.Key_Controller.Key {
+- char[][] key
+- char[][] extendedKey
++ char[][] getExtendedKey()
++ void extendKey()
+}
+class Model.FileHolder {
+- String filepath
+- Queue<Block> blocks
+- AES algo
+- Boolean mode
+- {static} int CHUNK_SIZE
+- Queue<Block> readFileIntoBlocks(String)
+- String bytesToHexString(byte[],int)
++ String getFilePath()
++ Queue<Block> getBlocks()
++ void writeBlocksToFile(String)
+- void writeBlocksToZipFileWithEncryptedFiles(String)
+- void addFileToZip(ZipOutputStream,File,String)
+- InputStream getBlocksAsInputStream()
+- void writeBlocksToNonZipFile(String)
+- byte[] hexStringToBytes(String)
++ {static} void main(String[])
+}
+class Model.Algorithm.SaltGenerator {
++ {static} String generate(String)
+}
+interface Model.AESObserver {
+~ void update()
+~ void updateProgress(double)
+}
+class Model.Algorithm.Rcon {
+~ {static} char[] rconTable
++ {static} char getRconValue(char)
+}
+class Model.Algorithm.LogTable {
+~ {static} int[] logTable
+~ {static} int[] AlogTable
++ {static} int getLog(int)
++ {static} int getALog(int)
+}
+class Controller.LoadingPopup {
+- Stage stage
+- LoadingPopupController controller
++ void updateProgress(double)
++ void show(String,double)
++ void hide()
+}
+class Controller.AboutController {
+- AnchorPane ap
+- double mousePressX
+- double mousePressY
+- Stage primaryStage
++ void onMousePressed(MouseEvent)
++ void onMouseDragged(MouseEvent)
++ void mouseEnter(MouseEvent)
++ void mouseLeave(MouseEvent)
+}
+class Controller.MainScreenController {
+- AnchorPane ap
+~ Stage main
+- ChoiceBox disksList
+- TextField passInput
+- Button encrypt
+- ModelControl model
+- Text salt
+- boolean isSalt
+- double mousePressX
+- double mousePressY
+- Stage primaryStage
+~ LoadingPopup lp
++ void initialize()
+- void checkPassword(String)
++ void onMousePressed(MouseEvent)
++ void onMouseDragged(MouseEvent)
++ void Encrypt()
++ void Decrypt()
+- void LoadingPopup(String)
++ void update()
++ void updateProgress(double)
++ void Exit()
++ void mouseEnter(MouseEvent)
++ void mouseLeave(MouseEvent)
++ void handle(MouseEvent)
++ void changeSalt()
+}
+class Model.Algorithm.AES {
+- Key key
++ Block Encrypt(Block)
++ Block Decrypt(Block)
++ {static} String writeMatrix(char[][],int,int)
++ {static} void printMatrix(char[][],int,int)
++ {static} char mul(int,char)
++ {static} void mixColumn2(int,char[][])
++ {static} void invMixColumn2(int,char[][])
+}
+class Model.ThreadBlock {
+- Block bl
+- AES algorithm
+- Boolean mode
++ void run()
+}
+class Model.USB_Controller.UsbReader {
+- String driveLetter
+- List<String> filePaths
++ void readFiles()
+- void readDirectory(File)
++ List<String> getFilePaths()
+}
+class Controller.MainScreen {
++ void start(Stage)
++ {static} void main(String[])
+}
+class Controller.MainScreen$WindowButtons {
+}
+class Model.Algorithm.Block {
+- char[][] data
++ char[][] getData()
+}
+class Model.Algorithm.SBox {
+~ {static} char[] sbox
+~ {static} char[] rsbox
++ {static} char getSBoxValue(char)
++ {static} char getSBoxInvert(char)
+}
+
+
+javafx.beans.Observable <|.. Model.ModelControl
+Model.AESObserver <|.. Controller.MainScreenController
+Model.Runnable <|.. Model.ThreadBlock
+javafx.application.Application <|-- Controller.MainScreen
+Controller.MainScreen +.. Controller.MainScreen$WindowButtons
+Controller.HBox <|-- Controller.MainScreen$WindowButtons
+@enduml

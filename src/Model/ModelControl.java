@@ -22,6 +22,13 @@ public class ModelControl implements Observable {
     private List<AESObserver> observers = new ArrayList<>();
 
 
+    public void startProcess(FunctionMode mode,String path, String pass, String salt, Boolean Mode) throws Exception {
+        switch (mode){
+            case Usb -> startUsbProcess(path,pass,salt,Mode);
+            case File -> startFileProcess(path,pass,salt,Mode);
+            case Folder -> startFolderProcess(path,pass,salt,Mode);
+        }
+    }
 
     public void startUsbProcess(String diskOnkey, String pass, String salt, Boolean Mode) throws Exception {
         UsbReader usb = new UsbReader(diskOnkey);
@@ -66,7 +73,7 @@ public class ModelControl implements Observable {
 
     public void startFileProcess(String path, String pass, String salt, Boolean Mode) throws Exception{
         Key key  = new Key(KeyGenerator.generateKey(pass, !salt.isEmpty() ? salt : SaltGenerator.generate(path)).toCharArray());
-        AES algo = null;
+        AES algo = new AES(key);
         FileHolder file = new FileHolder(path,algo,Mode);
         ((Runnable) () -> {
             notifyProgressObservers(new Random().nextDouble(0.05,0.2));
@@ -76,18 +83,16 @@ public class ModelControl implements Observable {
     }
 
     public void startFolderProcess(String path, String pass, String salt, Boolean Mode) throws Exception{
-        Key key  = new Key(KeyGenerator.generateKey(pass, !salt.isEmpty() ? salt : SaltGenerator.generate(path)).toCharArray());
-        AES algo = null;
         File[] allFiles = new File(path).listFiles();
         ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
         for (File inFile :
                 allFiles) {
-
+            System.out.println(inFile.getName());
             executorService.submit(new Runnable() {
                 @Override
                 public void run() {
-                    Key key  = new Key(KeyGenerator.generateKey(pass, !salt.isEmpty() ? salt : SaltGenerator.generate(path)).toCharArray());
+                    Key key  = new Key(KeyGenerator.generateKey(pass, !salt.isEmpty() ? salt : SaltGenerator.generate(inFile.getAbsolutePath())).toCharArray());
                     AES algo = null;
                     try {
                         algo = new AES(key);
@@ -96,8 +101,8 @@ public class ModelControl implements Observable {
                     }
                     FileHolder file = new FileHolder(inFile.getAbsolutePath(),algo,Mode);
                     try {
-                        // System.out.println("File: "+path+" Being encrypted");
-                        file.writeBlocksToFile(path);
+                        System.out.println("File: "+path+" Being encrypted");
+                        file.writeBlocksToFile(inFile.getAbsolutePath());
                         double progress = (double) 1 / allFiles.length;
                         notifyProgressObservers(progress);
                     } catch (IOException e) {

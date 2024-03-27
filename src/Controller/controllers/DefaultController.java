@@ -2,6 +2,7 @@ package Controller.controllers;
 
 import Controller.runners.LoadingPopup;
 import Model.AESObserver;
+import Model.FunctionMode;
 import Model.ModelControl;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
@@ -15,6 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -22,6 +24,9 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public abstract class DefaultController implements AESObserver {
+
+    protected FunctionMode mode;
+
     @FXML private AnchorPane ap;
     protected Stage main;
 
@@ -89,7 +94,7 @@ public abstract class DefaultController implements AESObserver {
 
         new Thread(() -> {
             try {
-                model.startUsbProcess(path,passInput.getText(),saltInput.getText(),Boolean.TRUE);
+                model.startProcess(mode,path,passInput.getText(),saltInput.getText(),Boolean.TRUE);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -100,7 +105,7 @@ public abstract class DefaultController implements AESObserver {
         LoadingPopup("Decrypting...");
         new Thread(() -> {
             try {
-                model.startUsbProcess(path,passInput.getText(),saltInput.getText(),Boolean.FALSE);
+                model.startProcess(mode,path,passInput.getText(),saltInput.getText(),Boolean.FALSE);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -172,11 +177,13 @@ public abstract class DefaultController implements AESObserver {
             primaryStage = (Stage) ap.getScene().getWindow();
         }
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("fxmls/aboutMe.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Controller/fxmls/aboutMe.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root, 780, 521);
             scene.setFill(Color.TRANSPARENT);
             primaryStage.setScene(scene);
+            AboutController ab = loader.getController();
+            ab.setMode(mode);
             primaryStage.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -218,4 +225,37 @@ public abstract class DefaultController implements AESObserver {
         }
 
     }
+
+
+    public void showNextStage(String showNextStage){
+        if (primaryStage==null){
+            primaryStage = (Stage) ap.getScene().getWindow();
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(showNextStage));
+            Parent root = loader.load();
+            Scene scene = new Scene(root, 780, 521);
+            scene.setFill(Color.TRANSPARENT);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void MenuItemClicked(MouseEvent event){
+        System.out.println(((HBox)event.getSource()).getId()+" "+mode.name());
+        if(((HBox)event.getSource()).getId().equals(mode.name())){
+            return;
+        }
+        switch (((HBox)event.getSource()).getId()){
+            case "Usb" -> showNextStage("/Controller/fxmls/sample.fxml");
+            case "Folder" -> showNextStage("/Controller/fxmls/FolderForm.fxml");
+            case "File" -> showNextStage("/Controller/fxmls/FileForm.fxml");
+
+        }
+    }
+
+
 }
