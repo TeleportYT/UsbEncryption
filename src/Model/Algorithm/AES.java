@@ -2,82 +2,18 @@ package Model.Algorithm;
 
 import Model.Key_Controller.Key;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-
 public class AES {
-
-    static File fileText;
-    static FileWriter fw2;
-    static BufferedWriter bw2;
-    static boolean initialized = false;
 
     private Key key;
 
 
 
-    public AES(Key key) throws Exception {
+    public AES(Key key) {
         this.key = key;
 
-        /*
-        long startTime = System.currentTimeMillis();
-
-        String option = "d";
-        String keyFile = "C:\\Users\\Vivien\\Downloads\\testingEncryption\\src\\key";
-        String inputFile = "C:\\Users\\Vivien\\Downloads\\testingEncryption\\src\\data.enc";
-
-        BufferedReader reader3 = new BufferedReader(new FileReader(keyFile));
-
-
-        String line3 = reader3.readLine();
-
-        while(line3.length() < 32)
-            line3 += "0";
-
-        if(line3.length() > 32)
-            line3 = line3.substring(0, 32);
-
-        reader3.close();
-
-         */
         key.extendKey();
         System.out.println("Extended key:");
         printMatrix(key.getExtendedKey(), 4, 40);
-        /*
-
-        BufferedReader reader2 = new BufferedReader(new FileReader(inputFile));
-
-        String line2 = reader2.readLine();
-        while (line2 != null)
-        {
-            System.out.println("Working on line: "+ line2);
-            while (line2.length() < 32) {
-                line2 += "0";
-            }
-
-            if (line2.length() > 32) {
-                line2 = line2.substring(0, 32);
-            }
-
-
-            if ( option.equalsIgnoreCase("e"))
-            {
-
-
-            }
-            else
-            {
-
-            }
-            line2 = reader2.readLine();
-        }
-        long endTime   = System.currentTimeMillis();
-        long totalTime = endTime - startTime;
-        System.out.println(totalTime);
-        reader2.close();
-        bw2.close();
-         */
     }
 
     public Block Encrypt(Block dataBlock){
@@ -107,7 +43,7 @@ public class AES {
 
             for (int c2 = 0; c2 < 4; c2++) {
                 char temp[] = {dataBlock.getData()[c2][0], dataBlock.getData()[c2][1], dataBlock.getData()[c2][2], dataBlock.getData()[c2][3]};
-                dataBlock.getData()[c2][(0 + 4 - c2) % 4] = temp[0];
+                dataBlock.getData()[c2][(4 - c2) % 4] = temp[0];
                 dataBlock.getData()[c2][(1 + 4 - c2) % 4] = temp[1];
                 dataBlock.getData()[c2][(2 + 4 - c2) % 4] = temp[2];
                 dataBlock.getData()[c2][(3 + 4 - c2) % 4] = temp[3];
@@ -117,7 +53,7 @@ public class AES {
            // printPlainText(dataBlock.getData(), 4, 4);
 
             if (c == 13) {
-                break;
+                return dataBlock;
             }
 
             mixColumn2(0, dataBlock.getData());
@@ -159,7 +95,7 @@ public class AES {
 
             for (int c2 = 0; c2 < 4; c2++) {
                 char temp[] = {dataBlock.getData()[c2][0], dataBlock.getData()[c2][1], dataBlock.getData()[c2][2], dataBlock.getData()[c2][3]};
-                dataBlock.getData()[c2][(0 + c2) % 4] = temp[0];
+                dataBlock.getData()[c2][(c2) % 4] = temp[0];
                 dataBlock.getData()[c2][(1 + c2) % 4] = temp[1];
                 dataBlock.getData()[c2][(2 + c2) % 4] = temp[2];
                 dataBlock.getData()[c2][(3 + c2) % 4] = temp[3];
@@ -214,18 +150,6 @@ public class AES {
             }
         return out;
     }
-
-    public static void printPlainText(char text[][], int row, int column) {
-        for (int c = 0; c < row; c++) {
-
-            for (int c2 = 0; c2 < column; c2++) {
-                System.out.print("" + String.format("%02X", (int) text[c2][c]) + "");
-            }
-
-        }
-        System.out.println("");
-    }
-
 
 
     public static void printMatrix(char[][] matrix, int row, int column) {

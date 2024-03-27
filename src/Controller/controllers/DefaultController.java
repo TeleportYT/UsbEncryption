@@ -1,69 +1,52 @@
-package Controller;
+package Controller.controllers;
 
+import Controller.runners.LoadingPopup;
 import Model.AESObserver;
 import Model.ModelControl;
-import Model.USB_Controller.UsbDriveFinder;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Effect;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
-import java.io.File;
-import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
-
-import static java.lang.System.exit;
-
-public class MainScreenController implements AESObserver {
-
+public abstract class DefaultController implements AESObserver {
     @FXML private AnchorPane ap;
-    Stage main;
-
-    @FXML
-    private ChoiceBox disksList;
+    protected Stage main;
 
     @FXML
     private TextField passInput,saltInput;
+    @FXML
+    private Text salt;
 
     @FXML
     private Button encrypt,decrypt;
 
     private ModelControl model;
 
+    protected String path;
+
     @FXML
-    private Text salt;
-    private boolean isSalt=false;
-
+    private VBox menuList;
     public void initialize() {
-        List<String> drives = UsbDriveFinder.getUsbDrives();
-
-        ObservableList<String> itemList = FXCollections.observableArrayList(drives);
-
-        disksList.setItems(itemList);
-        disksList.getSelectionModel().selectFirst();
 
         model = new ModelControl();
         model.addListener(this);
 
 
         passInput.textProperty().addListener((observable, oldValue, newValue) -> {
-           checkPassword(newValue);
+            checkPassword(newValue);
         });
 
 
@@ -106,7 +89,7 @@ public class MainScreenController implements AESObserver {
 
         new Thread(() -> {
             try {
-                model.StartProcess((disksList.getSelectionModel().getSelectedItem().toString().substring(0,1)),passInput.getText(),saltInput.getText(),Boolean.TRUE);
+                model.startUsbProcess(path,passInput.getText(),saltInput.getText(),Boolean.TRUE);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -117,7 +100,7 @@ public class MainScreenController implements AESObserver {
         LoadingPopup("Decrypting...");
         new Thread(() -> {
             try {
-               model.StartProcess((disksList.getSelectionModel().getSelectedItem().toString().substring(0,1)),passInput.getText(),saltInput.getText(),Boolean.FALSE);
+                model.startUsbProcess(path,passInput.getText(),saltInput.getText(),Boolean.FALSE);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -165,6 +148,17 @@ public class MainScreenController implements AESObserver {
         ((ColorAdjust)node.getEffect()).brightnessProperty().set(0);
     }
 
+
+    private boolean isSalt=false;
+
+    @FXML
+    public void changeSalt(){
+        salt.setVisible(!isSalt);
+        saltInput.setVisible(!isSalt);
+        isSalt = !isSalt;
+    }
+
+
     @FXML
     public void handle(MouseEvent me) {
         if (primaryStage==null){
@@ -172,11 +166,56 @@ public class MainScreenController implements AESObserver {
         }
         primaryStage.setIconified(true);
     }
+    @FXML
+    public void showAbout(){
+        if (primaryStage==null){
+            primaryStage = (Stage) ap.getScene().getWindow();
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("fxmls/aboutMe.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root, 780, 521);
+            scene.setFill(Color.TRANSPARENT);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean isList = false;
+    private int ignoreOnce = 1;
+    @FXML
+    public void controlMenu(){
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5),menuList);
+        if (!isList){
+            System.out.println("Opening Menu");
+            transition.setToX(161.0);
+            ap.setOnMouseClicked(this::CloseMenu);
+            ignoreOnce = 1;
+        }
+        else{
+            System.out.println("Closing Menu");
+            transition.setToX(0);
+            ap.setOnMouseClicked(null);
+        }
+        isList = !isList;
+        transition.play();
+    }
 
     @FXML
-    public void changeSalt(){
-            salt.setVisible(!isSalt);
-            saltInput.setVisible(!isSalt);
-            isSalt = !isSalt;
+    private void CloseMenu(MouseEvent event) {
+        System.out.println("Closing Menu");
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5),menuList);
+        if (isList && ignoreOnce == 0){
+            transition.setToX(menuList.getTranslateX()-161.0);
+            ap.setOnMouseClicked(null);
+            isList = false;
+            transition.play();
+        }
+        else{
+            ignoreOnce--;
+        }
+
     }
 }

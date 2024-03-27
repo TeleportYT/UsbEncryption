@@ -18,11 +18,6 @@ public class Block {
         }
     }
 
-/*
-Hex to Noraml
-
- */
-
 
 
 

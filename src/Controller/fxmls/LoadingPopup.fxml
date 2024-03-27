@@ -5,15 +5,15 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane fx:id="loadingPopupRoot" alignment="center" hgap="10" prefHeight="100.0" prefWidth="360.0" style="-fx-background-color: #0c1821;" styleClass="root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LoadingPopupController">
+<GridPane fx:id="loadingPopupRoot" alignment="center" hgap="10" prefHeight="100.0" prefWidth="360.0" style="-fx-background-color: #0c1821;" styleClass="root" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.controllers.LoadingPopupController">
     <children>
         <Label fx:id="loadingMessage" prefHeight="13.0" prefWidth="350.0" text="Please wait..." textFill="WHITE" GridPane.rowIndex="1" />
         <StackPane fx:id="LoadingPane" prefHeight="18.0" prefWidth="340.0" GridPane.rowIndex="2">
             <children>
-                <ProgressBar fx:id="loadingIndicator" prefHeight="18.0" prefWidth="306.0" progress="0.0" stylesheets="@style.css" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
+                <ProgressBar fx:id="loadingIndicator" prefHeight="18.0" prefWidth="306.0" progress="0.0" stylesheets="@../style.css" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
                 <ImageView fx:id="loadingGif" fitHeight="39.0" fitWidth="52.0" layoutX="-100.0" preserveRatio="true" translateX="-153.0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                     <image>
-                        <Image url="@Resources/rainbowDashNoBg.gif" />
+                        <Image url="@../Resources/rainbowDashNoBg.gif" />
                     </image>
                <StackPane.margin>
                   <Insets />

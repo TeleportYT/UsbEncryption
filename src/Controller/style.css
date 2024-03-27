@@ -1,7 +1,11 @@
 .root {
     -fx-padding: 10 ;
     -fx-alignment: center ;
+
+    
 }
+
+
 
 .progress-bar > .bar {
     -fx-background-image: url("Resources/rainborBar.png");

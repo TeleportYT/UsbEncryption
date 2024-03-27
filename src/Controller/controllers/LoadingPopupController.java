@@ -1,4 +1,4 @@
-package Controller;
+package Controller.controllers;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;

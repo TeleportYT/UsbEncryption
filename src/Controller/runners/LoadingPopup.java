@@ -1,7 +1,7 @@
-package Controller;
+package Controller.runners;
 
+import Controller.controllers.LoadingPopupController;
 import javafx.animation.PauseTransition;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -24,14 +24,14 @@ public class LoadingPopup {
         stage.initOwner(parentStage);
         stage.initStyle(StageStyle.DECORATED);
         stage.setOnCloseRequest(e->e.consume());
-        stage.getIcons().add(new Image(getClass().getResource("Resources/icon.jpg").toExternalForm()));
+        stage.getIcons().add(new Image(getClass().getResource("/Controller/Resources/icon.jpg").toExternalForm()));
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("LoadingPopup.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Controller/fxmls/LoadingPopup.fxml"));
             Parent root = loader.load();
             controller = loader.getController();
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/Controller/style.css").toExternalForm());
             stage.setScene(scene);
         } catch (Exception e) {
             e.printStackTrace();
